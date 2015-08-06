@@ -1,0 +1,1 @@
+([:dependencies ([org.clojure/clojure "1.6.0"] [clojure-opennlp/clojure-opennlp "0.3.3"] [berkeleylm/berkeleylm "1.1.5"] [io.aviso/pretty "0.1.17"] [org.clojure/tools.nrepl "0.2.6" :exclusions ([org.clojure/clojure]) :scope "test"] [clojure-complete/clojure-complete "0.2.3" :exclusions ([org.clojure/clojure]) :scope "test"])])
