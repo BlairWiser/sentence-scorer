@@ -23,3 +23,9 @@
   (for [i (range 0 5) :let [s (nth ngrams i)]]
     (get-weighted-mean s)))
 
+(defn aggregate-vectors
+  "Takes a list of score vectors and returns average"
+  [scores]
+  (let [k (count scores)]
+    (for [i (range 5)]
+      (/ (apply + (map #(nth % i) scores)) k))))

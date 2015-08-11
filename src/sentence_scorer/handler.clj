@@ -15,6 +15,25 @@
   [request name]
   (get-in request [:params name]))
 
+(defn score-sentence
+  "Takes a sentence and returns score vector"
+  [sentence]
+  (get-sentence-vectors (get-n-grams lm sentence)))
+
+(defn get-file-lines
+  "Takes a filename and returns the file's sentences"
+  [filename]
+  (let [content (slurp filename)]
+    ;;Split on commas and periods followed by whitespace
+    (str/split content #",\s|\.\s+"))) 
+
+(defn score-file
+  "Takes a filename and returns the scores for the sentences"
+  [filename]
+  (let [file-path (str directory filename)
+        lines (get-file-lines file-path)]
+    (zipmap lines (map score-sentence lines))))
+
 (defn get-sentence-score
   "Returns n-gram scores of sentence for n 1 through 5"
   [sentence]  
