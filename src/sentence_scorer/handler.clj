@@ -8,14 +8,14 @@
         [sentence-scorer.analysis]))
 
 (def root (str (System/getProperty "user.dir") "/resources/public"))
-(def lm (make-google-lm))
+(def lm (make-google-lm-fake))
 
 (defn param
   "Extract parameter from a request"
   [request name]
   (get-in request [:params name]))
 
-(defn score-sentence
+(defn get-sentence-score
   "Returns n-gram scores of sentence for n 1 through 5"
   [sentence]  
   (let [words (tokenize sentence)
@@ -35,8 +35,14 @@
 (defroutes app-routes
   ;;(route/files "/" {:root root})
   (POST "/score/" request
-        (let [sentence (param request :sentence)]
-          (score-sentence sentence)))
+       (let [sentence (param request :sentence)]
+         (get-sentence-score sentence)))
+  (GET "/score/:collectionID/:fileID" [collectionID fileID]
+       (let [filename (str root collectionID fileID)]
+         {:status 200
+          :body {:name fileID
+                 :collection collectionID
+                 }}))
   (route/not-found "Not Found"))
 
 (def app

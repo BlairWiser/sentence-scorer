@@ -22,3 +22,4 @@
   [ngrams]
   (for [i (range 0 5) :let [s (nth ngrams i)]]
     (get-weighted-mean s)))
+
