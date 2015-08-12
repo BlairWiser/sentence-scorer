@@ -3,12 +3,13 @@
             [compojure.route :as route]
             [compojure.handler :as handler]
             [ring.middleware.json :as middleware]
-            [ring.util.response :as resp])
+            [ring.util.response :as resp]
+            [clojure.string :as str])
   (:use [sentence-scorer.evaluate]
         [sentence-scorer.analysis]))
 
 (def root (str (System/getProperty "user.dir") "/resources/public"))
-(def lm (make-google-lm-fake))
+(def lm (make-google-lm))
 
 (defn param
   "Extract parameter from a request"
@@ -30,9 +31,8 @@
 (defn score-file
   "Takes a filename and returns the scores for the sentences"
   [filename]
-  (let [file-path (str directory filename)
-        lines (get-file-lines file-path)]
-    (zipmap lines (map score-sentence lines))))
+  (let [lines (get-file-lines filename)]
+    (vector lines (map score-sentence lines))))
 
 (defn get-sentence-score
   "Returns n-gram scores of sentence for n 1 through 5"
@@ -57,11 +57,17 @@
        (let [sentence (param request :sentence)]
          (get-sentence-score sentence)))
   (GET "/score/:collectionID/:fileID" [collectionID fileID]
-       (let [filename (str root collectionID fileID)]
+       (let [filename (str root "/" collectionID "/" fileID)
+             result (score-file filename)
+             lines (first result)
+             scores (get result 1)]
          {:status 200
           :body {:name fileID
                  :collection collectionID
-                 }}))
+                 :breakdownScore {:overall (aggregate-vectors scores)
+                                  :lines lines
+                                  :scores scores
+                                  }}}))
   (route/not-found "Not Found"))
 
 (def app
