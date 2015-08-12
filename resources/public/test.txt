@@ -1,3 +1,0 @@
-This is a test file. This is the second sentence. More sentences are in the middle. We are coming to the end now. This is the last sentence. 
-
-I lied because this is the second paragraph. Aren't I tricky.
