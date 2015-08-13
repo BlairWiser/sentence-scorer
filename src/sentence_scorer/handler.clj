@@ -21,33 +21,23 @@
   [sentence]
   (get-sentence-vectors (get-n-grams lm sentence)))
 
-(defn get-file-lines
-  "Takes a filename and returns the file's sentences"
-  [filename]
-  (let [content (slurp filename)]
-    ;;Split on commas and periods followed by whitespace
-    (str/split content #",\s|\.\s+|!\s|?\s"))) 
-
 (defn score-file
-  "Takes a filename and returns the scores for the sentences"
-  [filename]
-  (let [lines (get-file-lines filename)]
+  "Takes a block of text and returns the scores for the sentences"
+  [text]
+  ;;Split on commas and periods followed by whitespace
+  (let [lines (str/split text #",\s|\.\s+|!\s|\?\s")]
     (vector lines (map score-sentence lines))))
 
 (defroutes app-routes
   ;;(route/files "/" {:root root})
-  (GET "/score/:collectionID/:fileID" [collectionID fileID]
-       (let [filename (str root "/" collectionID "/" fileID)
-             result (score-file filename)
+  (POST "/score/" request
+       (let [text (param request :text)
+             result (score-file text)
              lines (first result)
              scores (get result 1)]
          {:status 200
-          :body {:name fileID
-                 :collection collectionID
-                 :breakdownScore {:overall (aggregate-vectors scores)
-                                  :lines lines
-                                  :scores scores
-                                  }}}))
+          :body {:overall (aggregate-vectors scores)
+                 :sentenceScores (zipmap (reverse lines) (reverse scores))}}))
   (route/not-found "Not Found"))
 
 (def app
