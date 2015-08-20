@@ -10,13 +10,13 @@
   []
   (do
     (println "Loading the Google language model.")
-    (let [modeldir "/home/blair/NLP/models" ;;(System/getenv "LMDIR")
+    (let [modeldir (System/getenv "LMDIR") ;; environtment variable with directory of lm files
           vocab (str modeldir "/vocab_cs.gz")
           lm (str modeldir "/eng.blm")
           goog-lm (if (empty? modeldir)
                     (throw (Exception. "Environment variable LMDIR is not set"))
                     (LmReaders/readGoogleLmBinary lm vocab))]
-      (println "Completed")
+      (println "Completed")7
       goog-lm)))
 
 ;; Fake lm for debug purposes
