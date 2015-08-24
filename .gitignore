@@ -9,3 +9,4 @@ pom.xml.asc
 /.lein-*
 /.nrepl-port
 /resources/public
+local_mvn_repo/
