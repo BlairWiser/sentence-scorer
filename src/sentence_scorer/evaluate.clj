@@ -16,7 +16,7 @@
           goog-lm (if (empty? modeldir)
                     (throw (Exception. "Environment variable LMDIR is not set"))
                     (LmReaders/readGoogleLmBinary lm vocab))]
-      (println "Completed")7
+      (println "Completed")
       goog-lm)))
 
 ;; Fake lm for debug purposes

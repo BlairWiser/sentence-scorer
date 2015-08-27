@@ -8,7 +8,6 @@
   (:use [sentence-scorer.evaluate]
         [sentence-scorer.analysis]))
 
-(def root (str (System/getProperty "user.dir") "/resources/public"))
 (def lm (make-google-lm))
 
 (defn param
@@ -21,6 +20,12 @@
   [sentence]
   (get-sentence-vectors (get-n-grams lm sentence)))
 
+(defn get-file-lines
+  "Takes a filename and returns the file's sentences"
+  [filename]
+  (let [content (slurp filename)]
+    (str/split content #"\n|,\s|\.\s+|!\s|\?\s")))
+
 (defn score-file
   "Takes a block of text and returns the scores for the sentences"
   [text]
@@ -29,7 +34,6 @@
     (vector lines (map score-sentence lines))))
 
 (defroutes app-routes
-  ;;(route/files "/" {:root root})
   (POST "/score/" request
        (let [text (param request :text)
              result (score-file text)
