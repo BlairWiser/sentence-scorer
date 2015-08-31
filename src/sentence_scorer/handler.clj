@@ -12,11 +12,6 @@
 (def lm (make-google-lm))
 (def base-dir (System/getenv "COLLECTIONS_UPLOAD_FOLDER"))
 
-(defn param
-  "Extract parameter from a request"
-  [request name]
-  (get-in request [:params name]))
-
 (defn score-sentence
   "Takes a sentence and returns score vector"
   [sentence]
