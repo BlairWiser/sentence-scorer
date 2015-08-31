@@ -9,6 +9,7 @@
         [sentence-scorer.analysis]))
 
 (def lm (make-google-lm))
+(def base-dir (System/getenv "COLLECTIONS_UPLOAD_FOLDER"))
 
 (defn param
   "Extract parameter from a request"
@@ -20,12 +21,6 @@
   [sentence]
   (get-sentence-vectors (get-n-grams lm sentence)))
 
-(defn get-file-lines
-  "Takes a filename and returns the file's sentences"
-  [filename]
-  (let [content (slurp filename)]
-    (str/split content #"\n|,\s|\.\s+|!\s|\?\s")))
-
 (defn score-file
   "Takes a block of text and returns the scores for the sentences"
   [text]
@@ -34,14 +29,15 @@
     (vector lines (map score-sentence lines))))
 
 (defroutes app-routes
-  (POST "/score/" request
-       (let [text (param request :text)
+  (GET "/:collectionID/:fileID" [collectionID fileID]
+       (let [filename (str base-dir "/" collectionID "/" fileID)
+             text (slurp filename)
              result (score-file text)
-             lines (first result)
-             scores (get result 1)]
+             score (get result 1)]
          {:status 200
-          :body {:overall (aggregate-vectors scores)
-                 :sentenceScores (zipmap (reverse lines) (reverse scores))}}))
+          :body {:name collectionID
+                 :articles {:name fileID
+                            :score (aggregate-vectors score)}}}))
   (route/not-found "Not Found"))
 
 (def app
