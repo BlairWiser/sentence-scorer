@@ -4,7 +4,8 @@
             [compojure.handler :as handler]
             [ring.middleware.json :as middleware]
             [ring.util.response :as resp]
-            [clojure.string :as str])
+            [clojure.string :as str]
+            [clojure.java.io :as io])
   (:use [sentence-scorer.evaluate]
         [sentence-scorer.analysis]))
 
@@ -29,7 +30,7 @@
     (vector lines (map score-sentence lines))))
 
 (defroutes app-routes
-  (GET "/:collectionID/:fileID" [collectionID fileID]
+  (GET "/:collectionID/:fileID/" [collectionID fileID]
        (let [filename (str base-dir "/" collectionID "/" fileID)
              text (slurp filename)
              result (score-file text)
@@ -38,6 +39,15 @@
           :body {:name collectionID
                  :articles {:name fileID
                             :score (aggregate-vectors score)}}}))
+  (GET "/:collectionID/" [collectionID]
+       (let [dirname (str base-dir "/" collectionID)
+             filenames (.list (io/file dirname))
+             results (for [x filenames :let [text (slurp (str dirname "/" x))
+                                             score (get (score-file text) 1)]] 
+                       (hash-map :name x, :score (aggregate-vectors score)))]
+         {:status 200
+          :body {:name collectionID
+                 :articles results}}))
   (route/not-found "Not Found"))
 
 (def app
