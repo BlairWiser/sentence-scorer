@@ -30,12 +30,13 @@
              filename (str base-dir "/" collectionID "/" fileID)
              text (slurp filename)
              result (score-file text)
-             score (get result 1)]
-         {:status 200
-          :body {:name collectionID
-                 :articles {:name fileID
-                            :score (aggregate-vectors score)}
-                 :time (/ (- (System/currentTimeMillis) timeStart) 1000)}}))
+             score (get result 1)
+             resultMap {:status 200
+                        :body {:name collectionID
+                        :articles {:name fileID
+                        :score (aggregate-vectors score)}}}]
+            (assoc resultMap :time (/ (- (System/currentTimeMillis) timeStart) 1000))))
+
   (GET "/:collectionID/" [collectionID]
        (let [timeStart (System/currentTimeMillis)
              dirname (str base-dir "/" collectionID)
@@ -43,11 +44,13 @@
              results (for [x filenames :let [text (slurp (str dirname "/" x))
                                              score (get (score-file text) 1)]] 
                        (hash-map :name x, :score (aggregate-vectors score)))
-             sortResults (sort-by :name results)]
-         {:status 200
-          :body {:name collectionID
-                 :articles sortResults
-                 :time (/ (- (System/currentTimeMillis) timeStart) 1000)}}))
+             sortResults (sort-by :name results)
+             resultMap {:status 200
+                        :body {:name collectionID
+                        :articles sortResults
+                        }}]
+          (assoc resultMap :time (/ (- (System/currentTimeMillis) timeStart) 1000))))
+  
   (route/not-found "Not Found"))
 
 (def app
