@@ -34,8 +34,8 @@
              resultMap {:status 200
                         :body {:name collectionID
                         :articles {:name fileID
-                        :score (aggregate-vectors score)}}}]
-            (assoc resultMap :time (/ (- (System/currentTimeMillis) timeStart) 1000))))
+                                   :score (aggregate-vectors score)}}}]
+            (assoc resultMap :body (assoc (:body resultMap) :time (/ (- (System/currentTimeMillis) timeStart) 1000)))))
 
   (GET "/:collectionID/" [collectionID]
        (let [timeStart (System/currentTimeMillis)
@@ -49,7 +49,7 @@
                         :body {:name collectionID
                         :articles sortResults
                         }}]
-          (assoc resultMap :time (/ (- (System/currentTimeMillis) timeStart) 1000))))
+          (assoc resultMap :body (assoc (:body resultMap) :time (/ (- (System/currentTimeMillis) timeStart) 1000)))))
   
   (route/not-found "Not Found"))
 
