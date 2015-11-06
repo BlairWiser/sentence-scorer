@@ -17,40 +17,44 @@
   [sentence]
   (get-sentence-vectors (get-n-grams lm sentence)))
 
-(defn score-file
+(defn score-text
   "Takes a block of text and returns the scores for the sentences"
   [text]
   ;;Split on commas and periods followed by whitespace
-  (let [lines (str/split text #",\s|\.\s+|!\s|\?\s")]
-    (vector lines (map score-sentence lines))))
+  (let [sentences (str/split text #",\s|\.\s+|!\s|\?\s")]
+    (vector sentences (map score-sentence sentences))))
 
 (defroutes app-routes
   (GET "/:collectionID/:fileID/" [collectionID fileID]
-       (let [timeStart (System/currentTimeMillis)
-             filename (str base-dir "/" collectionID "/" fileID)
-             text (slurp filename)
-             result (score-file text)
-             score (get result 1)
-             resultMap {:status 200
-                        :body {:name collectionID
-                        :articles {:name fileID
-                                   :score (aggregate-vectors score)}}}]
-            (assoc resultMap :body (assoc (:body resultMap) :time (/ (- (System/currentTimeMillis) timeStart) 1000)))))
+       (let [start     (System/currentTimeMillis)
+             filename  (str base-dir "/" collectionID "/" fileID)
+             text      (slurp filename)
+             result    (score-text text)
+             scores    (get result 1)
+             score-vec (aggregate-vectors scores)]
+         {:status 200
+          :body {:collection collectionID
+                 :file       fileID
+                 :score      score-vec
+                 :time       (- (System/currentTimeMillis) start)}}))
 
   (GET "/:collectionID/" [collectionID]
-       (let [timeStart (System/currentTimeMillis)
-             dirname (str base-dir "/" collectionID)
-             filenames (.list (io/file dirname))
-             results (for [x filenames :let [text (slurp (str dirname "/" x))
-                                             score (get (score-file text) 1)]] 
-                       (hash-map :name x, :score (aggregate-vectors score)))
-             sortResults (sort-by :name results)
-             resultMap {:status 200
-                        :body {:name collectionID
-                        :articles sortResults
-                        }}]
-          (assoc resultMap :body (assoc (:body resultMap) :time (/ (- (System/currentTimeMillis) timeStart) 1000)))))
-  
+       (let [start        (System/currentTimeMillis)
+             dirname      (str base-dir "/" collectionID)
+             filenames    (.list (io/file dirname))
+             results      (doall 
+                            (for [x filenames]
+                              (let [text   (slurp (str dirname "/" x))
+                                    scores (get (score-text text) 1)]
+                                {:name x
+                                 :score (aggregate-vectors scores)})))]
+
+         {:status   200
+          :body     {:collection collectionID
+                     :articles   (sort-by :name results)
+                     :time       (- (System/currentTimeMillis) start)}}))
+
+
   (route/not-found "Not Found"))
 
 (def app

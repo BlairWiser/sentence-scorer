@@ -30,5 +30,5 @@
   "Takes a list of score vectors and returns average"
   [scores]
   (let [k (count scores)]
-    (for [i (range 5)]
-      (/ (apply + (map #(nth % i) scores)) k))))
+    (doall (for [i (range 5)]
+      (/ (apply + (map #(nth % i) scores)) k)))))
