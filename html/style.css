@@ -1,0 +1,74 @@
+body {
+    font-family: "Roboto";
+    font-weight: 300;
+    position: fixed;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.top {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+}
+.text-entry {
+    display: flex;
+    flex-direction: row;
+}
+.text-entry input {
+    display: block;
+    flex: 1;
+    font-family: "Ubuntu Mono";
+    font-size: 20pt;
+    padding: 20px;
+}
+.text-entry button {
+    display: block;
+    width: 150px;
+    border: none;
+    background: #ccc;
+    font-family: 'Roboto';
+    font-size: 20pt;
+    padding: 20px;
+}
+.text-entry button:hover {
+    font-weight: bold;
+}
+
+
+.bottom {
+    display: flex;
+    flex-direction: row;
+    margin-top: 50px;
+}
+.bottom .text {
+    flex: 1;
+    border: thin solid black;
+    margin: 20px;
+}
+.bottom .info {
+
+}
+
+.info table td:last-child {
+    width: 200px;
+    border: 1px solid #aaa;
+}
+.info table td {
+    padding: 10px;
+}
+pre {
+    white-space: pre-wrap;       /* CSS 3 */
+    white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+    white-space: -pre-wrap;      /* Opera 4-6 */
+    white-space: -o-pre-wrap;    /* Opera 7 */
+    word-wrap: break-word;       /* Internet Explorer 5.5+ */
+    font-family: "Ubuntu Mono";
+    font-size: 14pt;
+    padding: 15px;
+}

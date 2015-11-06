@@ -1,1 +1,37 @@
-Hello
+<!doctype html>
+
+<html>
+<head>
+<link rel="stylesheet" href="fonts/fonts.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="top">
+    <div class="text-entry">
+        <input type="text" placeholder="Entry collection/file here" id="filepath"></input>
+        <button id="score">Score</button>
+    </div>
+    <div class="bottom">
+        <div class="text">
+            <pre id="text"></pre>
+        </div>
+        <div class="info">
+            <table>
+                <tr> <td>5-gram</td> <td data-n="5"></td> </tr>
+                <tr> <td>4-gram</td> <td data-n="4"></td> </tr>
+                <tr> <td>3-gram</td> <td data-n="3"></td> </tr>
+                <tr> <td>2-gram</td> <td data-n="2"></td> </tr>
+                <tr> <td>1-gram</td> <td data-n="1"></td> </tr>
+                <tr> <td>Time (ms)</td> <td id="time"></td></tr>
+            </table>
+        </div>
+    </div>
+    <div class="footer">
+        Example: <a class="examples"
+            href="#">SEPdataset/Dynamic_Gift_Content_Final_assembled_a-Plain_Text-1000.txt</a>
+    </div>
+</div>
+<script src="jquery-2.1.4.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

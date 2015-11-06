@@ -53,7 +53,10 @@
              text      (slurp filename)
              result    (score-text text)
              scores    (get result 1)
-             detail    (if (nil? detailed) nil (score-detail text))
+             detail    (if (nil? detailed) 
+                         nil 
+                         {:text text,
+                          :scores (score-detail text)})
              score-vec (aggregate-vectors scores)]
          {:status 200
           :body {:collection collectionID
