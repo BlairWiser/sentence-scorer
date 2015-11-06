@@ -3,7 +3,7 @@
         [sentence-scorer.analysis])
   (:require [clojure.string :as str]))
 
-(def lm (make-google-lm))
+(def lm (make-google-lm-fake))
 (def directory "resources/public/")
 
 (defn score-sentence

@@ -16,7 +16,7 @@
 (defn get-n-grams
   "Takes a sentence and returns its n-gram scores for n = 5 through 1"
   [lm sentence]
-  (let [words (str/split sentence #"\s")]
+  (let [words (str/split sentence #"\s+")]
     (for [i (range 5 0 -1)]
       (:spanScores (score-by-blm {:words words :N i :lm lm})))))
 
