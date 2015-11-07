@@ -23,7 +23,6 @@
 (defn score-text
   "Takes a block of text and returns the scores for the sentences"
   [text]
-  ;;Split on commas and periods followed by whitespace
   (let [sentences (split-into-sentences text)]
     (vector sentences (map score-sentence sentences))))
 
@@ -31,7 +30,7 @@
 (defn score-detail-for-sentence
   "Obtain n-gram details of the given sentence"
   [sentence]
-  (let [words    (str/split sentence #"\s+")]
+  (let [words (get-words sentence)]
     (loop [i      1
            result {}]
       (if (<= i 5)
@@ -41,10 +40,14 @@
           (recur (inc i) (merge result ngram-scores)))
         result))))
 
-(defn score-detail [text]
+(defn score-detail 
+  "Returns the list of top-100 *worst* ngrams"
+  [text]
   (let [sentences  (split-into-sentences text)
-        score-maps (map score-detail-for-sentence sentences)]
-    (into [] (apply merge score-maps))))
+        score-maps (map score-detail-for-sentence sentences)
+        score-pairs (into [] (apply merge score-maps))
+        get-score   #(get % 1)]
+    (take 100 (sort-by get-score (filter #(> (get-score %) -200) score-pairs)))))
 
 (defroutes app-routes
   (GET "/nlp/:collectionID/:fileID/" [collectionID fileID detailed]

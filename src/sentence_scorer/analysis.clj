@@ -2,6 +2,9 @@
   (:use [sentence-scorer.evaluate])
   (:require [clojure.string :as str]))
 
+(defn get-words [sentence]
+  (str/split sentence #"\W+"))
+
 (defn get-weighted-mean
   "Takes a list and returns the mean"
   [scores]
@@ -16,7 +19,7 @@
 (defn get-n-grams
   "Takes a sentence and returns its n-gram scores for n = 5 through 1"
   [lm sentence]
-  (let [words (str/split sentence #"\s+")]
+  (let [words (get-words sentence)]
     (for [i (range 5 0 -1)]
       (:spanScores (score-by-blm {:words words :N i :lm lm})))))
 

@@ -12,6 +12,7 @@ scoreButton.click(function() {
     var dfd = fetchScores(filepath);
 
     dfd.then(function(result) {
+        console.debug(result);
         populateInfo(result);
         populateText(result);
     });
