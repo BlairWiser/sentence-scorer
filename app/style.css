@@ -71,4 +71,32 @@ pre {
     font-family: "Ubuntu Mono";
     font-size: 14pt;
     padding: 15px;
+    height: 400px;
+    overflow: auto;
+}
+
+.ngram {
+    display: inline-block;
+    color: #833;
+    position: relative;
+    border: thin solid black;
+    margin-top: 10px;
+}
+.ngram .score {
+    display: inline-block;
+    opacity: 0.5;
+    background: #888;
+    color: #fff;
+    padding: 2px;
+    margin-left: 4px;
+}
+.ngram:hover {
+    font-weight: bold;
+}
+
+.ngram:hover .score {
+    opacity: 1.0;
+}
+.ngram.worst {
+    color: #f00;
 }

@@ -41,25 +41,27 @@
         result))))
 
 (defn score-detail 
-  "Returns the list of top-100 *worst* ngrams"
-  [text]
+  "Returns the list of top *worst* ngrams"
+  [text top]
   (let [sentences  (split-into-sentences text)
         score-maps (map score-detail-for-sentence sentences)
         score-pairs (into [] (apply merge score-maps))
         get-score   #(get % 1)]
-    (take 100 (sort-by get-score (filter #(> (get-score %) -200) score-pairs)))))
+    (take top (sort-by get-score (filter #(> (get-score %) -200) score-pairs)))))
 
 (defroutes app-routes
-  (GET "/nlp/:collectionID/:fileID/" [collectionID fileID detailed]
+  (GET "/nlp/:collectionID/:fileID/" [collectionID fileID detailed top]
        (let [start     (System/currentTimeMillis)
              filename  (str base-dir "/" collectionID "/" fileID)
              text      (slurp filename)
              result    (score-text text)
              scores    (get result 1)
+             k         (try (Integer/parseInt top)
+                            (catch Exception e 100))
              detail    (if (nil? detailed) 
                          nil 
                          {:text text,
-                          :scores (score-detail text)})
+                          :scores (score-detail text k)})
              score-vec (aggregate-vectors scores)]
          {:status 200
           :body {:collection collectionID
@@ -84,7 +86,8 @@
                      :articles   (sort-by :name results)
                      :time       (- (System/currentTimeMillis) start)}}))
 
-  (route/files "/" {:root "html"})
+  (route/files "/" {:root "presentation"})
+  (route/files "/article/" {:root "app"})
   (route/not-found "Not Found"))
 
 (def app
