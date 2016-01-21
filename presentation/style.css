@@ -33,3 +33,8 @@ ul.authors {
 pre.small {
     font-size: 50%;
 }
+
+.embedded {
+    -webkit-transform: scale(0.8);
+    -webkit-transform-origin: 0 0;
+}
