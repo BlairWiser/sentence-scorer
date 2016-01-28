@@ -45,54 +45,464 @@
                 <section>
                     <h1>Assessing Quality of Natural Lanugage Text</h1>
                     
-                    <ul class="authors">
-                        <li><img src="images/masoud.jpg">Masoud Makrehchi</img></li>
-                        <li><img src="images/kenpu.jpg">Ken Pu </img></li>
-                        <li><img src="images/blair.jpg">Blair Wiser </img></li>
+                    <table>
+                        <tr>
+                            <td>
+                                <ul class="authors">
+                                    <li><img src="images/masoud.jpg">Masoud Makrehchi</img></li>
+                                    <li><img src="images/kenpu.jpg">Ken Pu </img></li>
+                                </ul>
+                            </td>
+                            <td>
+                                <ul class="authors">
+                                    <li><img src="images/blair.jpg">Blair Wiser </img></li>
+                                    <li><img src="images/caleb.jpg">Caleb
+                                    Phillips </img></li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </table>
+                </section>
+
+
+
+
+
+
+
+
+                <section>
+                    <h2>Problem Definition</h2>
+
+                    <p>Given a body of text, </p>
+                    
+                    <ul>
+                        <li>Identify <em>problematic</em> sections</li>
+                        <li>Derive an overall numeric score for the entire
+                        text</li>
+                    </ul>
+
+                    <hr>
+
+                    <p>Given a collection of text articles</p>
+                    <ul>
+                        <li> Rank the articles by their language quality </li>
                     </ul>
                 </section>
 
+
+
+
+
+
+
+
                 <section>
-                    <h2>Sample code</h2>
-                    <pre><code class="python" data-trim>
-for i in range(10):
-    a = "hello world"
-    print a[i:i+10]
-                </code></pre>
+                    <h2>Defining text quality</h2>
+
+                    <ul>
+                        <li>Grammatic constructs
+                            <blockquote>
+                                No reliable deep parser available.  The English
+                                grammar is hard to handle efficiently.
+                            </blockquote>
+
+                            <p class=note>
+                            We researched the state of the art deep parsers, and
+                            found that they were not suitable for industrial
+                            deployment.
+                            </p>
+                        </li>
+                        <li>Lange model based estimation
+                            <blockquote>
+                                <ol>
+                                    <li> Requires statistical processing of
+                                    text.</li>
+                                    <li> Requires sufficiently large existing
+                                    corpus to train a language model
+                                </ol>
+                            </blockquote>
+                            <b>We chose this approach.</b>
+                        </li>
+                    </ul>
                 </section>
 
-                <section>
-                    <h2>Magic</h2>
 
-                    <div class="columns">
-                        <div class="column">
+
+
+
+
+
+
+                <section>
+                    <h2>Enters the Google Book Corpus</h2>
+
+                    <ul>
+                        <li>
+                        <code style=font-size:70%>http://storage.googleapis.com/books/ngrams/books/datasetsv2.html</code>
+                        </li>
+                    </ul>
+
+                    <table style=margin-top:50px>
+                        <tr>
+                            <th>Language</th>
+                            <td>American English</td>
+                        </tr>
+                        <tr>
+                            <th>Source</th>
+                            <td>Books digitized by Google Books: 1800 -
+                                2000
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Total words</th>
+                            <td>155 billion</td>
+                        </tr>
+                        <tr>
+                            <th>Organization</th>
+                            <td>1-ngram to 5-ngrams</td>
+                        </tr>
+                        <tr>
+                            <th>Data size</th>
+                            <td>24 GB compressed, over 500 GB uncompressed</td>
+                        </tr>
+                        <tr></tr>
+                    </table>
+                </section>
+
+
+
+
+
+
+
+
+
+
+
+
+                <section>
+                    <h2>Language Model</h2>
+
+                    <p>How can 1/2 TB of strings help us decide on text
+                    quality?</p>
+                    <ul>
+                        <li>By looking up how often a phrase occurs in
+                        literature, we can infer it's popularity.</li>
+                        <li> Use popularity as a measure of <em>text
+                        quality</em>.
+                    </ul>
+
+                    <hr>
+
+                    <b>Definition:</b>
+                    <blockquote>
+
+                        A <em>language model</em> is a mathematical model that
+                        computes the probability of a phrase based on a
+                        <i>large</i> sample of observed phrases.
+                    
+                    </blockquote>
+                </section>
+
+
+
+
+
+
+
+
+
+                <section>
+                    <h2>From Google Corpus to A Language Model</h2>
+
+                    <div class=columns>
+                        <div class=column>
+                            <h4>Challenges</h4>
                             <ul>
-                                <li >Are you ready...</li>
-                                <li >Three</li>
-                                <li >Two</li>
-                                <li >One</li>
+                                <li>
+                                The volume of text exceeds the memory capacity of the largest machine we have
+                                available. (240 GB required)
+                                </li>
+                                <li>
+                                Using MySQL to store the phrases for look up was
+                                too slow for real-time text analytics.
+                                    <blockquote>
+                                        Each phrase lookup required > 1 s.
+                                    </blockquote>
+                                </li>
                             </ul>
                         </div>
+                        <div class=column>
+                            <h4>Berkeley LM: Approximation by hashing </h4>
 
-                        <div class="column " style="flex: 4">
-                            <iframe
-                                class="embedded"
-                                width="800"
-                                height="600"
-                                src="/article/#SEP100/Dynamic_Gift_Content_Final_assembled_a-Plain_Text-1001.text">
-                            </iframe>
+                            <img src="images/berkeley-lm.png"></img>
+                            <p class=caption>Computational Linguistics, 2011</p>
                         </div>
                     </div>
                 </section>
 
-                <section>
-                    <h1>But how?</h1>
 
-                    <pre class="small"><code class="sh">
-wget http://db.science.uoit.ca/score/SEP100/abc.text?detailed=true&top=10
+
+
+
+
+                <section>
+                    <h2>Using the Berkeley LM Library</h2>
+
+                    <div class=column>
+                        <a
+                            href="https://code.google.com/archive/p/berkeleylm/">https://code.google.com/archive/p/berkeleylm/</a>
+                        <br>
+                        <br>
+                        License
+                        <blockquote>
+                            Apache License 2.0
+                        </blockquote>
+                        
+                        <br>
+                        Features
+                        <br>
+                        <blockquote>
+                            <ul>
+                                <li>Trains from the Google Book Corpus</li>
+                                <li>Represents phrases using compressed hash
+                                values to save storage space</li>
+                                <li>Resulted language model is ~ 10 GB</li>
+                            </ul>
+                        </blockquote>
+                    </div>
+                </section>
+
+
+
+
+
+
+                <section>
+                    <h2>Berkeley LM API</h2>
+                    <pre><code class="java" data-trim style="min-height:500px">
+import edu.berkeley.nlp.lm.io.LmReaders;
+import edu.berkeley.nlp.lm.NgramLanguageModel;
+import java.util.Arrays;
+
+// These files are compiled from the raw Google corpus
+// The sorted vocabulary file is used to generate
+// space saving hash values
+String vocabFile = "vocabulary.gz";
+
+// The language model uses hash vectors on the hash values
+// to encode a prefix tree for fast in-memory lookup of phrases.
+String modelFile = "englishModel.blm";
+
+// Constructs the in-memory data structure
+// ~ 9GB, takes about 2 minutes
+NgramLanguageModel model&lt;String> = 
+        LmReaders.readGoogleLmBinary(modelFile, vocabFile);
+
+// Super fast lookup < 0.01 ms
+List&lt;String> phrase = Arrays.asList(new String[]{"My name is Jack"});
+model.getLogProb(phrase);
                     </code></pre>
                 </section>
 
+
+
+
+
+                <section>
+                    <h2>Scoring a sentence</h2>
+
+                    <div class=columns>
+                        <div class=column>
+                            <p>
+                            So far, we have the ability to pass phrases of
+                            <em>one</em> to <em>five</em> words.
+                            <br><br>
+                            The language model returns a small probability
+                            according to the likelihood of that phrase appearing
+                            in the book corpus.
+                            </p>
+                        </div>
+                        <div class=column>
+                            <p style="text-align:center;padding-top:50px">
+                            <i>How do we score a sentence?</i>
+                            </p>
+                            <blockquote style=float:right>
+                                We generate all sub-phrases of length one to
+                                five from a sentence of arbitrary length.
+                            </blockquote>
+                        </div>
+                    </div>
+                </section>
+
+
+
+
+
+
+
+
+
+                <section>
+                    <iframe
+                    src="https://docs.google.com/presentation/d/1Km2CMtCH2K5c8bk_oIBZzRTbWMdPGwcDPP0iUkPFd9U/embed?start=false&loop=false&delayms=3000"
+                    frameborder="0" width="960" height="569"
+                    allowfullscreen="true" mozallowfullscreen="true"
+                    webkitallowfullscreen="true"></iframe>
+                </section>
+
+
+
+
+
+
+                <section>
+                    <h2>Detecting anomalies in text</h2>
+                    <p>
+                    We rank sentences by their weighted averaged scores.
+                    </p>
+
+                    <p>
+                    Sentences with low scores are considered poor.
+                    </p>
+
+                    <p>
+                    Phrases with the lowest scores of <i>poor</i> sentences are
+                    selected.
+                    </p>
+
+                    <hr>
+
+                    <p>A piece of text has an aggregated score based on its
+                    top-<i>k</i> poor phrases.
+                </section>
+
+
+
+
+
+
+
+                <section>
+                    <h2>Exposing text ranking as a Web service</h2>
+                    
+                    <ul>
+                        <li>We built a Web service to expose the ranking
+                        algorithm using a RESTful API.</li>
+
+                        <li>
+                        We assume that the text files are organized on the
+                        server side already in the following directory
+                        organization.
+                            <ul>
+                                <li>Collection
+                                    <ul>
+                                        <li>Article</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </section>
+
+                <section>
+                    <pre><code style="min-height: 500px">
+    /nlp/$collection/$article/
+
+    // JSON response: 5-gram, 4-gram, .. 1-gram quality
+    {score: [-8.9, -10.35, ... ]}
+
+    /nlp/$collection/$article/?detailed=1&top=10
+
+    // JSON response: detailed phrase level scoring information
+    // included.
+    {
+        score: [....],
+        detail: {
+            text: "...",
+            scores: [
+                [ phrase, score ], ....
+            ]
+        }
+    } </code></pre>
+                </section>
+
+
+
+
+
+
+
+
+
+
+
+
+                <section>
+                    <h2>Demo</h2>
+                        <div class=columns>
+                            <div style="flex: 4">
+                        <iframe
+                            class="embedded"
+                            width="800"
+                            height="700"
+                            style="-webkit-transform: scale(0.9)"
+                            src="/article/#SEP100/Dynamic_Gift_Content_Final_assembled_a-Plain_Text-1001.text">
+                        </iframe>
+                            </div>
+                            <div>
+                                <a target=_blank href="/article/">See here.</a>
+                            </div>
+                        </div>
+                </section>
+
+                <section>
+                    <h2>Integration</h2>
+
+                    <pre class="small"><code class="sh">
+wget http://db.science.uoit.ca:3000/nlp/SEP100/abc.text?detailed=true&top=10
+                    </code></pre>
+
+                    <p style=margin-top:150px>
+                    Try it out:
+
+                    <code style=font-size:20px>
+                        <a
+                        href="http://db.science.uoit.ca:3000/nlp/SEP100/Dynamic_Gift_Content_Final_assembled_a-Plain_Text-1001.text/?detailed=1&top=4"
+                        target=_blank>http://db.science.uoit.ca:3000/nlp/..../?detailed=1&top=4</a></code>
+                    </p>
+                </section>
+
+
+
+
+
+
+
+
+
+
+
+
+                <section>
+                    <div class=columns>
+                        <div class=column>
+                            <h2>Conclusion</h2>
+                        </div>
+                        <div class=column style=margin-left:100px;flex:2>
+                            <ul>
+                                <li>A statistical language model is built based
+                                on the Google Book corpus</li>
+                                <li>A method for ranking text based on the
+                                likelihood of its phrases</li>
+                                <li>Optimized scoring performance based on
+                                Berkeley LM open source library</li>
+                                <li>An open standard Web service to expose the
+                                ranking algorithm and its implementation</li>
+                            </ul>
+                        </div>
+                </section>
 			</div>
 
 		</div>
@@ -124,6 +534,8 @@ wget http://db.science.uoit.ca/score/SEP100/abc.text?detailed=true&top=10
 			});
 
 		</script>
+        <script>document.write('<script src="//' + location.host.split(':')[0] + ':35729/livereload.js"></' + 'script>')</script>
+
 
 	</body>
 </html>

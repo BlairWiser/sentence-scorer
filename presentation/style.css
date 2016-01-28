@@ -1,18 +1,50 @@
+@import url("./css/fonts/fonts.css");
+
+.reveal {
+    font-family: ETBembo;
+    font-weight: 300;
+}
 ul.authors {
     float: right;
     list-style: none;
+}
+ul.authors li {
+    margin: 0;
+    padding: 0;
 }
 .authors img {
     display: inline-block;
     max-width: 80px;
     vertical-align: middle;
 }
-.reveal section img {
+
+
+.reveal section {
+    text-align: left;
+}
+
+.reveal blockquote {
+    margin: 0;
+    padding-left: 20px;
+    border: none;
+    box-shadow: none;
+    border-left: 4px solid #888;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-style: normal;
+    font-size: 90%;
+}
+
+.reveal section .authors img {
     border: none;
     box-shadow: none;
     border-radius: 50%;
     opacity: 0.8;
     margin-right: 50px;
+}
+.reveal section img {
+    border: none;
+    opacity: 0.8;
 }
 .reveal pre code {
     padding: 20px;
@@ -37,4 +69,23 @@ pre.small {
 .embedded {
     -webkit-transform: scale(0.8);
     -webkit-transform-origin: 0 0;
+}
+
+.reveal p.note {
+    text-align: right;
+    font-style: italic;
+    font-size: 80%;
+}
+
+.small {
+    font-size: 80%;
+}
+em {
+    color: blue;
+}
+
+.reveal .caption {
+    font-family: Roboto;
+    font-size: 70%;
+    text-align: right;
 }
